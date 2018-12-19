@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>GPS-Positioner</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+    </style>
+</head>
+<body>
+
+<style>
+.marker {
+    display: block;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+</style>
+
+<div id='map'></div>
+
+<script>
+
+mapboxgl.accessToken = 'pk.eyJ1IjoiZWFybGIxMDExIiwiYSI6ImNqaHVtNWI1cTBueHcza2pxd3FyM3h0aXQifQ.IKEZKcdm4PJ2wTGyksG0Ow';
+
+var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v9',
+    zoom: 1
+});
+
+
+let since;
+function getGeoJSON() {
+    let url = 'http://localhost:3000/';
+    if (since !== undefined) {
+        url += '?since=' + since;
+    }
+
+    fetch(url, {
+        method: 'get',
+    }).then((response) => {
+        return response.json();
+    }).then((data) => {
+        
+        if (data !== null) {
+            since = data.time;
+
+            const marker = data.json;
+            console.log(data);
+            var el = document.createElement('div');
+            el.className = 'marker';
+            el.style.backgroundImage = 'url(images/' + data.image + ')';
+            el.style.width = marker.properties.iconSize[0] + 'px';
+            el.style.height = marker.properties.iconSize[1] + 'px';
+
+            el.addEventListener('click', function() {
+                window.alert(marker.properties.message);
+            });
+
+            // add marker to map
+            new mapboxgl.Marker(el)
+                .setLngLat(marker.geometry.coordinates)
+                .addTo(map);
+        }
+    });
+}
+
+setInterval(() => {
+    getGeoJSON();    
+}, 1000);
+
+
+/*
+var geojson = {
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "COSMOS1972GLONASS-50.33735941,-115.81617303",
+                "iconSize": [100, 100]
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -115.81617303,
+                    50.33735941
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "BEIDOU3M4-41.70832511,-0.59899463",
+                "iconSize": [100, 100]
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -0.59899463,
+                    41.70832511
+                ]
+            }  
+        }
+            
+    ]
+};
+
+
+
+// add markers to map
+geojson.features.forEach(function(marker) {
+    // create a DOM element for the marker
+    var el = document.createElement('div');
+    el.className = 'marker';
+    el.style.backgroundImage = 'url(images/' + marker.properties.name + '.jpg)';
+    el.style.width = marker.properties.iconSize[0] + 'px';
+    el.style.height = marker.properties.iconSize[1] + 'px';
+
+    el.addEventListener('click', function() {
+        window.alert(marker.properties.message);
+    });
+
+    // add marker to map
+    new mapboxgl.Marker(el)
+        .setLngLat(marker.geometry.coordinates)
+        .addTo(map);
+});
+*/
+
+</script>
+
+</body>
+</html>
