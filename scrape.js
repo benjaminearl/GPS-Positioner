@@ -5,7 +5,7 @@ var satID = [41328, 41019, 40730, 40534, 40294, 40105, 39741, 39533, 39166, 3883
 
 var timer = function() {
     async function jsonParse (satellite) {
-        const res = await fetch(`https://www.n2yo.com/rest/v1/satellite/positions/${satID[satellite]}/52.070499/4.300700/0/1/&apiKey=`);
+        const res = await fetch(`https://www.n2yo.com/rest/v1/satellite/positions/${satID[satellite]}/52.070499/4.300700/0/1/&apiKey=4J989X-GZMXTK-JW4T2J-3WEU`);
         
         const json = await res.json();
         const location = json.positions[0].satlatitude+","+json.positions[0].satlongitude;
@@ -14,7 +14,7 @@ var timer = function() {
             "properties": {
                 "name": json.info.satname,
                 "ID": satID[satellite],
-                "iconSize": [100, 100],
+                "iconSize": [50, 50],
             },
             "geometry": {
                 "type": "Point",
@@ -25,7 +25,7 @@ var timer = function() {
         const parsed = JSON.stringify(satInfo);
 
 
-        const meta = await fetch(`https://maps.googleapis.com/maps/api/streetview/metadata?size=600x300&location=${location}&pitch=90&key=`)
+        const meta = await fetch(`https://maps.googleapis.com/maps/api/streetview/metadata?size=600x300&location=${location}&pitch=90&key=AIzaSyBZl2WV1NDaNc3EUOywCLQfKYOaQyHUG9g`)
         const metadata = await meta.json();
         
         if(metadata.status === "ZERO_RESULTS"){ 
@@ -42,7 +42,7 @@ var timer = function() {
                 console.log("satellite captured.")
             })
 
-            const image = await fetch(`https://maps.googleapis.com/maps/api/streetview?size=600x600&location=${location}&pitch=90&key=AIzaSyC8p2za1hVq3Y2hzg328s5NK_-3XsTJRZs`);
+            const image = await fetch(`https://maps.googleapis.com/maps/api/streetview?size=600x600&location=${location}&pitch=90&key=AIzaSyBZl2WV1NDaNc3EUOywCLQfKYOaQyHUG9g`);
             const dest = fs.createWriteStream(`images/${timestamp}.jpg`);
             image.body.pipe(dest);
             // console.log("IMAGE FOUND! " + satName )

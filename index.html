@@ -30,8 +30,9 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiZWFybGIxMDExIiwiYSI6ImNqaHVtNWI1cTBueHcza2pxd
 
 var map = new mapboxgl.Map({
     container: 'map',
-    style: 'mapbox://styles/mapbox/streets-v9',
-    zoom: 9
+    style: 'mapbox://styles/earlb1011/cjlp0umtx7omd2rmot3r4du27',
+    zoom: 3,
+    center: [0, 0],
 });
 
 console.log('ok');
@@ -62,8 +63,7 @@ function getGeoJSON() {
             el.addEventListener('click', function() {
                 window.alert(marker.properties.message);
             });
-
-            map.setCenter(marker.geometry.coordinates);    
+   
             // add marker to map
             new mapboxgl.Marker(el)
                 .setLngLat(marker.geometry.coordinates)
